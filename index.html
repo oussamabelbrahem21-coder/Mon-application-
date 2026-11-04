@@ -3,86 +3,112 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mes Abonnements</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#101827;color:white;padding:22px}
-header{text-align:center;padding:20px 0}
-header h1{font-size:28px;margin-bottom:8px}
-header p{color:#9caac0}
+body{margin:0;padding:22px;background:#101827;color:white;font-family:Arial,sans-serif}
+header{text-align:center;padding:20px}
+header h1{font-size:28px}
+p,small{color:#aab6ca}
+.card{background:#1d293b;padding:18px;border-radius:16px;margin:12px 0}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:#1d293b;padding:18px;border-radius:16px;margin-bottom:15px}
-.card small{color:#aab6ca}
-.amount{font-size:25px;font-weight:bold;margin-top:10px;color:#75e0b0}
-h2{font-size:19px}
-form{background:#1d293b;padding:18px;border-radius:16px;margin-top:20px}
-input,select{width:100%;padding:13px;margin:8px 0 14px;border:1px solid #39475b;border-radius:9px;background:#101827;color:white;font-size:16px}
+.amount{font-size:24px;color:#75e0b0;font-weight:bold;margin-top:10px}
+h2{font-size:19px;margin-top:28px}
+input,select{width:100%;padding:13px;margin:8px 0 15px;border:1px solid #39475b;border-radius:9px;background:#101827;color:white;font-size:16px}
 label{font-size:13px;color:#cbd5e1}
-button{border:0;border-radius:10px;padding:13px;background:#735cf5;color:white;font-size:15px;font-weight:bold;cursor:pointer}
+button{border:0;border-radius:10px;padding:12px;background:#735cf5;color:white;font-weight:bold;cursor:pointer}
 form button{width:100%}
-.subscription{background:#1d293b;padding:16px;border-radius:13px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.subscription p{margin:6px 0;color:#aab6ca;font-size:13px}
-.delete{background:#e44b61;padding:9px;font-size:12px}
-.empty{text-align:center;color:#9caac0;padding:25px}
-footer{text-align:center;color:#77849a;font-size:12px;margin:30px 0}
+.subscription{background:#1d293b;padding:15px;border-radius:13px;margin:12px 0}
+.subscription p{font-size:13px}
+.delete{background:#e44b61;margin-top:10px}
+.edit{background:#536783;margin-top:10px;margin-right:7px}
+.day{color:#75e0b0;font-weight:bold}
+footer{text-align:center;color:#77849a;margin:30px}
 </style>
 </head>
 <body>
-
 <header>
 <h1>💎 Mes Abonnements</h1>
-<p>Gère toutes tes dépenses au même endroit</p>
+<p>Tous tes abonnements au même endroit</p>
 </header>
 
 <div class="stats">
+<div class="card"><small>Budget mensuel</small><div class="amount" id="monthly">0 €</div></div>
+<div class="card"><small>Budget annuel</small><div class="amount" id="yearly">0 €</div></div>
+</div>
+
 <div class="card">
-<small>Budget mensuel</small>
-<div class="amount" id="monthly">0,00 €</div>
+<h2>🔔 Mes rappels</h2>
+<p>Active les notifications pour recevoir un rappel la veille d'un prélèvement lorsque l'application est ouverte.</p>
+<button onclick="activateNotifications()">Activer les notifications</button>
+<p id="notificationStatus">Notifications non activées</p>
 </div>
-<div class="card">
-<small>Budget annuel</small>
-<div class="amount" id="yearly">0,00 €</div>
-</div>
-</div>
+
+<h2>📅 Prochains paiements</h2>
+<div id="calendar"></div>
 
 <h2>📋 Mes abonnements</h2>
 <div id="list"></div>
 
-<form id="form">
+<form id="form" class="card">
 <h2>➕ Ajouter un abonnement</h2>
-
 <label>Nom du service</label>
 <input id="name" placeholder="Ex : Netflix" required>
-
-<label>Prix (€)</label>
-<input id="price" type="number" min="0" step="0.01" placeholder="Ex : 15.99" required>
-
-<label>Fréquence de paiement</label>
+<label>Prix en euros</label>
+<input id="price" type="number" min="0.01" step="0.01" required>
+<label>Fréquence</label>
 <select id="cycle">
 <option value="monthly">Tous les mois</option>
 <option value="yearly">Tous les ans</option>
 <option value="weekly">Toutes les semaines</option>
 </select>
-
 <label>Prochain prélèvement</label>
 <input id="date" type="date" required>
-
 <button type="submit">Ajouter mon abonnement</button>
 </form>
 
-<footer>Mes Abonnements · Tes dépenses sous contrôle ❤️</footer>
+<footer>Mes Abonnements ❤️</footer>
 
 <script>
-let subscriptions = JSON.parse(localStorage.getItem("subscriptions") || "[]");
+let subscriptions=JSON.parse(localStorage.getItem("subscriptions")||"[]");
+let editing=-1;
+let notified=JSON.parse(localStorage.getItem("notified")||"[]");
 
-function money(value){
- return value.toLocaleString("fr-FR",{style:"currency",currency:"EUR"});
+function money(n){
+ return n.toLocaleString("fr-FR",{style:"currency",currency:"EUR"});
+}
+
+function localDate(s){
+ const [y,m,d]=s.split("-").map(Number);
+ return new Date(y,m-1,d);
+}
+
+function dateString(d){
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+function nextPayment(s){
+ let d=localDate(s.date);
+ const now=new Date();
+ now.setHours(0,0,0,0);
+ while(d<now){
+  if(s.cycle==="weekly") d.setDate(d.getDate()+7);
+  else if(s.cycle==="yearly") d.setFullYear(d.getFullYear()+1);
+  else{
+   const day=d.getDate();
+   d.setDate(1);
+   d.setMonth(d.getMonth()+1);
+   const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+   d.setDate(Math.min(day,last));
+  }
+ }
+ return d;
 }
 
 function monthlyCost(s){
- if(s.cycle==="yearly") return s.price/12;
- if(s.cycle==="weekly") return s.price*52/12;
+ if(s.cycle==="yearly")return s.price/12;
+ if(s.cycle==="weekly")return s.price*52/12;
  return s.price;
 }
 
@@ -92,64 +118,129 @@ function save(){
 }
 
 function render(){
- const list=document.getElementById("list");
- list.innerHTML="";
-
  let total=0;
+ const list=document.getElementById("list");
+ const calendar=document.getElementById("calendar");
+ list.innerHTML="";
+ calendar.innerHTML="";
 
  subscriptions.forEach((s,i)=>{
- total+=monthlyCost(s);
+  total+=monthlyCost(s);
+  const d=nextPayment(s);
 
- const div=document.createElement("div");
- div.className="subscription";
+  const div=document.createElement("div");
+  div.className="subscription";
 
- const info=document.createElement("div");
- const name=document.createElement("strong");
- name.textContent="📦 "+s.name;
- const details=document.createElement("p");
- details.textContent=money(s.price)+" · "+
- (s.cycle==="yearly"?"Annuel":s.cycle==="weekly"?"Hebdomadaire":"Mensuel")+
- " · Prochain paiement : "+s.date;
+  const title=document.createElement("strong");
+  title.textContent="📦 "+s.name;
+  const details=document.createElement("p");
+  details.textContent=money(s.price)+" · "+(s.cycle==="yearly"?"Annuel":s.cycle==="weekly"?"Hebdomadaire":"Mensuel");
 
- info.append(name,details);
+  const edit=document.createElement("button");
+  edit.className="edit";
+  edit.textContent="Modifier";
+  edit.onclick=()=>{
+   document.getElementById("name").value=s.name;
+   document.getElementById("price").value=s.price;
+   document.getElementById("cycle").value=s.cycle;
+   document.getElementById("date").value=s.date;
+   editing=i;
+   document.querySelector("#form h2").textContent="✏️ Modifier l'abonnement";
+   document.querySelector("#form button").textContent="Enregistrer les modifications";
+   document.getElementById("form").scrollIntoView({behavior:"smooth"});
+  };
 
- const del=document.createElement("button");
- del.className="delete";
- del.textContent="Supprimer";
- del.onclick=()=>{
- if(confirm("Supprimer cet abonnement ?")){
- subscriptions.splice(i,1);
- save();
- }
- };
+  const del=document.createElement("button");
+  del.className="delete";
+  del.textContent="Supprimer";
+  del.onclick=()=>{
+   if(confirm("Supprimer cet abonnement ?")){
+    subscriptions.splice(i,1);
+    save();
+   }
+  };
 
- div.append(info,del);
- list.appendChild(div);
+  div.append(title,details,edit,del);
+  list.appendChild(div);
+
+  const event=document.createElement("div");
+  event.className="card";
+  const eventName=document.createElement("strong");
+  eventName.textContent="💳 "+s.name;
+  const eventDate=document.createElement("p");
+  eventDate.className="day";
+  eventDate.textContent=d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  event.append(eventName,eventDate);
+  calendar.appendChild(event);
  });
 
- if(subscriptions.length===0){
- list.innerHTML='<div class="empty">Aucun abonnement pour le moment.<br>Ajoute ton premier abonnement ! 😊</div>';
+ if(!subscriptions.length){
+  list.textContent="Aucun abonnement enregistré.";
+  calendar.textContent="Ton calendrier est vide.";
  }
 
  document.getElementById("monthly").textContent=money(total);
  document.getElementById("yearly").textContent=money(total*12);
 }
 
-document.getElementById("form").addEventListener("submit",function(e){
- e.preventDefault();
+async function activateNotifications(){
+ if(!("Notification" in window)){
+  alert("Les notifications ne sont pas disponibles dans ce navigateur.");
+  return;
+ }
+ const permission=await Notification.requestPermission();
+ document.getElementById("notificationStatus").textContent=
+ permission==="granted"?"✅ Notifications autorisées":"Notifications non autorisées";
+ checkReminders();
+}
 
- subscriptions.push({
- name:document.getElementById("name").value.trim(),
- price:Number(document.getElementById("price").value),
- cycle:document.getElementById("cycle").value,
- date:document.getElementById("date").value
+function checkReminders(){
+ if(!("Notification" in window)||Notification.permission!=="granted")return;
+ const today=new Date();
+ today.setHours(0,0,0,0);
+
+ subscriptions.forEach(s=>{
+  const d=nextPayment(s);
+  const days=Math.round((d-today)/86400000);
+  if(days===1){
+   const key=s.name+"-"+dateString(d);
+   if(!notified.includes(key)){
+    new Notification("Rappel abonnement",{
+     body:s.name+" sera prélevé demain : "+money(s.price)
+    });
+    notified.push(key);
+    localStorage.setItem("notified",JSON.stringify(notified));
+   }
+  }
  });
+}
 
+document.getElementById("form").addEventListener("submit",e=>{
+ e.preventDefault();
+ const s={
+  name:document.getElementById("name").value.trim(),
+  price:Number(document.getElementById("price").value),
+  cycle:document.getElementById("cycle").value,
+  date:document.getElementById("date").value
+ };
+ if(editing>=0){
+  subscriptions[editing]=s;
+  editing=-1;
+ }else{
+  subscriptions.push(s);
+ }
+ document.querySelector("#form h2").textContent="➕ Ajouter un abonnement";
+ document.querySelector("#form button").textContent="Ajouter mon abonnement";
  save();
- this.reset();
+ e.target.reset();
 });
 
+if("Notification" in window && Notification.permission==="granted"){
+ document.getElementById("notificationStatus").textContent="✅ Notifications autorisées";
+}
 render();
+checkReminders();
+setInterval(checkReminders,60000);
 </script>
 </body>
 </html>
