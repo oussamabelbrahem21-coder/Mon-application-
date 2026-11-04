@@ -5,798 +5,586 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#100d19">
-<title>My Subscriptions 4.0</title>
-
+<title>My Subscriptions</title>
 <style>
 *{box-sizing:border-box}
-
 :root{
- --bg:#100d19;
- --card:#211a30;
- --border:#38294c;
- --text:#ffffff;
- --muted:#b5a5ca;
- --accent:#c59aff;
- --button:#8953d8;
- --input:#171222;
+ --bg:#100d19;--card:#211a30;--panel:#171222;
+ --border:#38294c;--text:#fff;--muted:#b5a5ca;
+ --accent:#c59aff;--button:#8953d8;--danger:#a63f65;
 }
-
-body.blue{
- --bg:#edf5ff;
- --card:#ffffff;
- --border:#c9ddf5;
- --text:#183252;
- --muted:#66809e;
- --accent:#287bd5;
- --button:#287bd5;
- --input:#f3f8ff;
+body.light{
+ --bg:#edf4ff;--card:#fff;--panel:#e7effc;
+ --border:#cad9f0;--text:#17243b;--muted:#60718c;
+ --accent:#3476cf;--button:#3978d6;--danger:#bd4960;
 }
-
 body{
- margin:0;
- padding:18px;
- background:var(--bg);
- color:var(--text);
- font-family:Arial,sans-serif;
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,sans-serif;padding:16px 15px 100px;
  transition:background .2s,color .2s;
 }
-
-header{
- text-align:center;
- padding:20px 0;
-}
-
-header h1{
- font-size:29px;
- color:var(--accent);
- margin:0;
-}
-
-header p{
- color:var(--muted);
- font-size:14px;
-}
-
-h2{
- font-size:19px;
- margin-top:25px;
-}
-
+header{padding:12px 0 20px}
+header h1{font-size:25px;color:var(--accent);margin:0}
+header p{font-size:13px;color:var(--muted);margin:6px 0}
+h2{font-size:18px;margin:8px 0 14px}
 .card,.subscription{
- background:var(--card);
- border:1px solid var(--border);
- border-radius:16px;
- padding:16px;
- margin:12px 0;
+ background:var(--card);border:1px solid var(--border);
+ border-radius:16px;padding:15px;margin:10px 0;
 }
-
-.stats{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:10px;
-}
-
-small,.muted{
- color:var(--muted);
-}
-
-.amount{
- font-size:22px;
- color:var(--accent);
- font-weight:bold;
- margin-top:10px;
-}
-
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+small,.muted{color:var(--muted)}
+.amount{font-size:23px;font-weight:bold;color:var(--accent);margin-top:9px}
+button,input,select{font:inherit}
+button{border:0;border-radius:11px;padding:11px 14px;background:var(--button);color:white;font-weight:bold;cursor:pointer}
 input,select{
- width:100%;
- padding:13px;
- margin:8px 0 14px;
- background:var(--input);
- color:var(--text);
- border:1px solid var(--border);
- border-radius:10px;
- font-size:16px;
+ width:100%;padding:13px;margin:7px 0 13px;
+ background:var(--panel);color:var(--text);
+ border:1px solid var(--border);border-radius:10px;font-size:16px;
 }
-
-label{
- font-size:13px;
- color:var(--muted);
+label{font-size:13px;color:var(--muted)}
+.primary{width:100%;padding:14px}
+.secondary{background:var(--panel);color:var(--text);border:1px solid var(--border)}
+.danger{background:var(--danger)}
+.hidden{display:none!important}
+.view{display:none}
+.view.active{display:block}
+.bottom-nav{
+ position:fixed;bottom:0;left:0;right:0;z-index:10;
+ display:grid;grid-template-columns:repeat(4,1fr);
+ background:var(--card);border-top:1px solid var(--border);
+ padding:9px 5px calc(9px + env(safe-area-inset-bottom));
 }
-
-button{
- border:0;
- border-radius:10px;
- padding:12px;
- background:var(--button);
- color:white;
- font-weight:bold;
- cursor:pointer;
+.nav-btn{
+ background:transparent;color:var(--muted);padding:7px 2px;
+ display:flex;flex-direction:column;align-items:center;gap:5px;
+ font-size:11px;font-weight:normal;
 }
-
-button:active{opacity:.7}
-
-.primary{
- width:100%;
- padding:15px;
-}
-
-.secondary{
- background:var(--border);
- color:var(--text);
-}
-
-.danger{background:#b43f60}
-.edit{background:#554071}
-
-.theme-buttons{
- display:flex;
- gap:10px;
-}
-
-.theme-buttons button{
- flex:1;
- min-height:48px;
-}
-
-.service{
- display:flex;
- align-items:center;
- gap:12px;
-}
-
+.nav-btn .ico{font-size:20px}
+.nav-btn.active{color:var(--accent);font-weight:bold}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.subscription{padding:13px}
+.service{display:flex;align-items:center;gap:11px}
 .logo{
- width:44px;
- height:44px;
- border-radius:12px;
- display:flex;
- align-items:center;
- justify-content:center;
- background:var(--border);
- font-size:22px;
- flex-shrink:0;
+ width:42px;height:42px;flex-shrink:0;border-radius:12px;
+ display:flex;align-items:center;justify-content:center;
+ background:var(--panel);color:var(--accent);font-size:19px;font-weight:bold;
 }
-
-.service p{
- margin:6px 0 0;
- color:var(--muted);
- font-size:13px;
+.service-info{min-width:0;flex:1;overflow-wrap:anywhere}
+.service-info p{font-size:12px;color:var(--muted);margin:5px 0}
+.actions{display:flex;gap:8px;margin-top:12px}
+.actions button{flex:1;font-size:12px;padding:9px}
+.edit{background:#655080}
+.empty{text-align:center;color:var(--muted);padding:22px 10px}
+.day{font-size:13px;color:var(--accent);margin:7px 0}
+.bar-row{display:grid;grid-template-columns:75px 1fr 65px;gap:7px;align-items:center;margin:13px 0;font-size:11px}
+.bar-bg{height:10px;background:var(--panel);border-radius:20px;overflow:hidden}
+.bar-fill{height:100%;background:var(--button);border-radius:20px}
+.fab{
+ position:fixed;right:20px;bottom:88px;z-index:5;
+ width:54px;height:54px;border-radius:50%;font-size:27px;
+ box-shadow:0 4px 18px #0004;
 }
-
-.actions{
- display:flex;
- gap:8px;
- margin-top:12px;
+.modal{
+ position:fixed;inset:0;background:#0009;z-index:20;
+ display:flex;align-items:flex-end;justify-content:center;
 }
-
-.actions button{flex:1}
-
-.day{
- color:var(--accent);
- font-weight:bold;
+.sheet{
+ width:100%;max-width:600px;max-height:90vh;overflow:auto;
+ background:var(--bg);border:1px solid var(--border);
+ border-radius:22px 22px 0 0;padding:20px 18px calc(25px + env(safe-area-inset-bottom));
 }
-
-.empty{
- text-align:center;
- color:var(--muted);
- padding:20px;
-}
-
-.bar-row{margin:14px 0}
-
-.bar-label{
- display:flex;
- justify-content:space-between;
- gap:10px;
- font-size:13px;
-}
-
-.bar-bg{
- height:10px;
- background:var(--border);
- border-radius:10px;
- margin-top:7px;
- overflow:hidden;
-}
-
-.bar{
- height:100%;
- background:var(--accent);
- border-radius:10px;
-}
-
-footer{
- text-align:center;
- color:var(--muted);
- font-size:12px;
- margin:30px 0;
-}
-
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.close{background:var(--panel);color:var(--text);font-size:20px;padding:6px 12px}
+.theme-choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.theme-choice button{padding:15px;border:2px solid transparent}
+.theme-choice button.selected{border-color:var(--accent)}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:25px 0}
 </style>
 </head>
-
 <body>
 
 <header>
-<h1>My Subscriptions</h1>
-<p>Tous tes abonnements sous contrôle</p>
+ <h1>My Subscriptions</h1>
+ <p>Tous tes abonnements sous contrôle</p>
 </header>
 
-<div class="card">
-<h2>Apparence</h2>
-<p class="muted">Choisis ton style préféré.</p>
-<div class="theme-buttons">
-<button onclick="setTheme('dark')">Noir et violet</button>
-<button onclick="setTheme('blue')">Bleu et blanc</button>
-</div>
-</div>
+<!-- ACCUEIL -->
+<section id="home" class="view active">
+ <div class="stats">
+  <div class="card">
+   <small>Dépenses mensuelles</small>
+   <div class="amount" id="monthly">0 €</div>
+  </div>
+  <div class="card">
+   <small>Dépenses annuelles</small>
+   <div class="amount" id="yearly">0 €</div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="topline">
+   <h2>Mon tableau de bord</h2>
+   <small id="count">0 abonnement</small>
+  </div>
+  <div id="chart"></div>
+ </div>
+ <div class="card">
+  <h2>Prochain paiement</h2>
+  <div id="nextPayment"></div>
+ </div>
+ <button class="primary" id="homeAdd">+ Ajouter un abonnement</button>
+</section>
 
-<div class="card">
-<label for="currency">Devise d'affichage</label>
-<select id="currency" onchange="changeCurrency()">
-<option value="EUR">Euro (€)</option>
-<option value="USD">Dollar ($)</option>
-<option value="GBP">Livre (£)</option>
-</select>
-<p class="muted">Le choix change le symbole affiché, pas la conversion des montants.</p>
-</div>
+<!-- ABONNEMENTS -->
+<section id="subscriptions" class="view">
+ <div class="topline">
+  <h2>Mes abonnements</h2>
+  <button id="addButton">+ Ajouter</button>
+ </div>
+ <input id="search" type="search" placeholder="Rechercher un abonnement...">
+ <div id="list"></div>
+</section>
 
-<div class="stats">
-<div class="card">
-<small>Dépenses mensuelles</small>
-<div class="amount" id="monthly">0 €</div>
-</div>
-<div class="card">
-<small>Dépenses annuelles</small>
-<div class="amount" id="yearly">0 €</div>
-</div>
-</div>
+<!-- CALENDRIER -->
+<section id="calendar" class="view">
+ <h2>Calendrier des paiements</h2>
+ <p class="note">Retrouve ici tes prochains prélèvements.</p>
+ <div id="calendarList"></div>
+</section>
 
-<div class="card">
-<small>Nombre d'abonnements actifs</small>
-<div class="amount" id="count">0</div>
-</div>
+<!-- REGLAGES -->
+<section id="settings" class="view">
+ <h2>Réglages</h2>
+ <div class="card">
+  <h2>Apparence</h2>
+  <p class="note">Choisis les couleurs de ton application.</p>
+  <div class="theme-choice">
+   <button id="darkTheme" class="selected" type="button">🌙 Noir / Violet</button>
+   <button id="lightTheme" type="button">☀️ Bleu / Blanc</button>
+  </div>
+ </div>
+ <div class="card">
+  <h2>Devise d'affichage</h2>
+  <select id="currency">
+   <option value="EUR">Euro (€)</option>
+   <option value="USD">Dollar ($)</option>
+   <option value="GBP">Livre (£)</option>
+  </select>
+  <p class="note">Ce réglage change le symbole et le format d'affichage, pas la valeur réelle des montants.</p>
+ </div>
+ <div class="card">
+  <h2>Sauvegarde</h2>
+  <button class="primary" id="exportButton">Exporter mes abonnements</button>
+  <button class="primary secondary" id="importButton" style="margin-top:9px">Importer une sauvegarde</button>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+  <p id="backupStatus" class="note"></p>
+ </div>
+ <div class="card">
+  <h2>Notifications</h2>
+  <p class="note">Rappels la veille d'un paiement lorsque l'application est ouverte et que le navigateur autorise les notifications.</p>
+  <button class="primary" id="notificationButton">Activer les notifications</button>
+  <p id="notificationStatus" class="note">Notifications non activées</p>
+ </div>
+ <footer>MY SUBSCRIPTIONS · VERSION 5.0</footer>
+</section>
 
-<h2>📊 Dépenses par service</h2>
-<div class="card" id="chart"></div>
+<!-- BOUTON AJOUT RAPIDE -->
+<button class="fab" id="fab" aria-label="Ajouter un abonnement">+</button>
 
-<h2>📅 Prochains paiements</h2>
-<div id="calendar"></div>
-
-<h2>Mes abonnements</h2>
-<input
- id="search"
- type="search"
- placeholder="Rechercher un abonnement..."
- oninput="render()"
->
-<div id="list"></div>
-
-<form id="form" class="card">
-<h2 id="formTitle">＋ Ajouter un abonnement</h2>
-
-<label for="name">Nom du service</label>
-<input id="name" placeholder="Netflix, Spotify..." required>
-
-<label for="price">Prix en euros</label>
-<input id="price" type="number" min="0.01" step="0.01" required>
-
-<label for="cycle">Fréquence</label>
-<select id="cycle">
-<option value="monthly">Tous les mois</option>
-<option value="yearly">Tous les ans</option>
-<option value="weekly">Toutes les semaines</option>
-</select>
-
-<label for="date">Prochain prélèvement</label>
-<input id="date" type="date" required>
-
-<button class="primary" id="submitButton" type="submit">
-Ajouter mon abonnement
-</button>
-
-<button
- class="secondary primary"
- type="button"
- onclick="cancelEdit()"
- style="margin-top:8px"
->
-Annuler la modification
-</button>
-</form>
-
-<div class="card">
-<h2>🔔 Mes rappels</h2>
-<p class="muted">
-Autorise les notifications pour recevoir un rappel la veille
-d'un paiement lorsque l'application peut les exécuter.
-</p>
-<button onclick="activateNotifications()">
-Activer les notifications
-</button>
-<p id="notificationStatus" class="muted">
-Notifications non activées
-</p>
-</div>
-
-<div class="card">
-<h2>💾 Sauvegarde</h2>
-<p class="muted">
-Télécharge une copie de tes abonnements pour les conserver.
-</p>
-
-<button onclick="exportData()">Exporter mes abonnements</button>
-
-<label for="importFile" style="display:block;margin-top:18px">
-Restaurer une sauvegarde
-</label>
-<input type="file" id="importFile" accept=".json,application/json">
-
-<button onclick="importData()">Importer la sauvegarde</button>
+<!-- FENÊTRE D'AJOUT -->
+<div class="modal hidden" id="modal">
+ <div class="sheet">
+  <div class="sheet-head">
+   <h2 id="formTitle">Nouvel abonnement</h2>
+   <button class="close" id="closeModal" type="button">×</button>
+  </div>
+  <form id="form">
+   <label for="name">Nom du service</label>
+   <input id="name" placeholder="Netflix, Spotify..." required>
+   <label for="price">Prix</label>
+   <input id="price" type="number" min="0.01" step="0.01" placeholder="9.99" required>
+   <label for="cycle">Fréquence</label>
+   <select id="cycle">
+    <option value="monthly">Tous les mois</option>
+    <option value="yearly">Tous les ans</option>
+    <option value="weekly">Toutes les semaines</option>
+   </select>
+   <label for="date">Prochain prélèvement</label>
+   <input id="date" type="date" required>
+   <button class="primary" id="submitButton" type="submit">Enregistrer</button>
+   <button class="primary secondary hidden" id="cancelEdit" type="button" style="margin-top:8px">Annuler la modification</button>
+  </form>
+ </div>
 </div>
 
-<footer>MY SUBSCRIPTIONS · VERSION 4.0</footer>
+<!-- NAVIGATION DU BAS -->
+<nav class="bottom-nav">
+ <button class="nav-btn active" data-view="home"><span class="ico">⌂</span>Accueil</button>
+ <button class="nav-btn" data-view="subscriptions"><span class="ico">▣</span>Abonnements</button>
+ <button class="nav-btn" data-view="calendar"><span class="ico">▦</span>Calendrier</button>
+ <button class="nav-btn" data-view="settings"><span class="ico">⚙</span>Réglages</button>
+</nav>
 
 <script>
 "use strict";
 
-/* CHARGEMENT DES DONNÉES */
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = "subscriptions";
 
-function readStorage(key,fallback){
+function readData(){
  try{
-  const value=localStorage.getItem(key);
-  return value===null?fallback:JSON.parse(value);
- }catch(error){
-  return fallback;
- }
+  const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  return Array.isArray(value) ? value : [];
+ }catch(e){return []}
 }
 
-let subscriptions=readStorage("subscriptions",[]);
-if(!Array.isArray(subscriptions))subscriptions=[];
+let subscriptions = readData();
+let editing = null;
+let currency = localStorage.getItem("appCurrency") || "EUR";
+let notified = [];
 
-let notified=readStorage("notified",[]);
-if(!Array.isArray(notified))notified=[];
-
-let editing=-1;
-
-let currency=localStorage.getItem("currency")||"EUR";
-
-document.getElementById("currency").value=currency;
-
-/* APPARENCE */
-
-function setTheme(theme){
- document.body.classList.toggle("blue",theme==="blue");
- localStorage.setItem("appTheme",theme);
-}
-
-setTheme(localStorage.getItem("appTheme")||"dark");
-
-/* DEVISE */
-
-function changeCurrency(){
- currency=document.getElementById("currency").value;
- localStorage.setItem("currency",currency);
- render();
-}
+try{
+ notified = JSON.parse(localStorage.getItem("notified") || "[]");
+ if(!Array.isArray(notified)) notified = [];
+}catch(e){notified=[]}
 
 function money(value){
- return Number(value).toLocaleString("fr-FR",{
-  style:"currency",
-  currency:currency
+ return Number(value || 0).toLocaleString("fr-FR",{
+  style:"currency",currency:currency
  });
 }
 
-/* CALCULS */
+function monthly(s){
+ const p = Number(s.price) || 0;
+ if(s.cycle==="yearly") return p/12;
+ if(s.cycle==="weekly") return p*52/12;
+ return p;
+}
 
-function getNext(subscription){
- let date=new Date(subscription.date+"T12:00:00");
-
- if(isNaN(date.getTime()))return new Date();
-
- let today=new Date();
+function getNext(s){
+ const d = new Date(s.date+"T12:00:00");
+ if(Number.isNaN(d.getTime())) return new Date();
+ const today = new Date();
  today.setHours(0,0,0,0);
-
- while(date<today){
-  if(subscription.cycle==="weekly"){
-   date.setDate(date.getDate()+7);
-  }else if(subscription.cycle==="yearly"){
-   date.setFullYear(date.getFullYear()+1);
-  }else{
-   let day=date.getDate();
-   date.setDate(1);
-   date.setMonth(date.getMonth()+1);
-   let lastDay=new Date(
-    date.getFullYear(),
-    date.getMonth()+1,
-    0
-   ).getDate();
-   date.setDate(Math.min(day,lastDay));
+ let safety=0;
+ while(d<today && safety<500){
+  if(s.cycle==="weekly") d.setDate(d.getDate()+7);
+  else if(s.cycle==="yearly") d.setFullYear(d.getFullYear()+1);
+  else{
+   const day=d.getDate();
+   d.setDate(1);
+   d.setMonth(d.getMonth()+1);
+   const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+   d.setDate(Math.min(day,last));
   }
+  safety++;
  }
-
- return date;
+ return d;
 }
 
-function monthly(subscription){
- let price=Number(subscription.price)||0;
-
- if(subscription.cycle==="yearly")return price/12;
- if(subscription.cycle==="weekly")return price*52/12;
-
- return price;
+function dateText(d){
+ return d.toLocaleDateString("fr-FR",{
+  weekday:"long",day:"numeric",month:"long",year:"numeric"
+ });
 }
 
-/* LOGOS AUTOMATIQUES */
-
-function serviceIcon(name){
- let n=name.toLowerCase();
-
- if(n.includes("netflix"))return "🎬";
- if(n.includes("spotify"))return "🎵";
- if(n.includes("disney"))return "🏰";
- if(n.includes("youtube"))return "▶️";
- if(n.includes("amazon"))return "📦";
- if(n.includes("apple"))return "🍎";
- if(n.includes("google"))return "🔎";
- if(n.includes("icloud"))return "☁️";
- if(n.includes("sport")||n.includes("gym"))return "🏋️";
-
- return name.charAt(0).toUpperCase();
+function save(){
+ localStorage.setItem(STORAGE_KEY,JSON.stringify(subscriptions));
+ render();
 }
 
-/* AFFICHAGE */
+function showView(view){
+ document.querySelectorAll(".view").forEach(el=>el.classList.remove("active"));
+ $(view).classList.add("active");
+ document.querySelectorAll(".nav-btn").forEach(btn=>{
+  btn.classList.toggle("active",btn.dataset.view===view);
+ });
+ $("fab").classList.toggle("hidden",view==="settings");
+ window.scrollTo(0,0);
+}
+
+document.querySelectorAll(".nav-btn").forEach(btn=>{
+ btn.addEventListener("click",()=>showView(btn.dataset.view));
+});
+
+function openModal(index=null){
+ editing=index;
+ $("form").reset();
+ $("cancelEdit").classList.toggle("hidden",index===null);
+ if(index!==null){
+  const s=subscriptions[index];
+  $("name").value=s.name;
+  $("price").value=s.price;
+  $("cycle").value=s.cycle;
+  $("date").value=s.date;
+  $("formTitle").textContent="Modifier l'abonnement";
+  $("submitButton").textContent="Enregistrer les modifications";
+ }else{
+  $("formTitle").textContent="Nouvel abonnement";
+  $("submitButton").textContent="Ajouter mon abonnement";
+  $("date").value=new Date().toISOString().slice(0,10);
+ }
+ $("modal").classList.remove("hidden");
+}
+
+function closeModal(){
+ $("modal").classList.add("hidden");
+ editing=null;
+ $("form").reset();
+}
+
+$("fab").onclick=()=>openModal();
+$("addButton").onclick=()=>openModal();
+$("homeAdd").onclick=()=>openModal();
+$("closeModal").onclick=closeModal;
+$("cancelEdit").onclick=closeModal;
+
+$("modal").addEventListener("click",e=>{
+ if(e.target===$("modal")) closeModal();
+});
+
+$("form").addEventListener("submit",e=>{
+ e.preventDefault();
+ const item={
+  name:$("name").value.trim(),
+  price:Number($("price").value),
+  cycle:$("cycle").value,
+  date:$("date").value
+ };
+ if(!item.name || !Number.isFinite(item.price) || item.price<=0 || !item.date)return;
+
+ if(editing!==null) subscriptions[editing]=item;
+ else subscriptions.push(item);
+
+ save();
+ closeModal();
+ showView("subscriptions");
+});
+
+$("search").addEventListener("input",render);
 
 function render(){
- const list=document.getElementById("list");
- const calendar=document.getElementById("calendar");
- const chart=document.getElementById("chart");
+ const total=subscriptions.reduce((sum,s)=>sum+monthly(s),0);
+ $("monthly").textContent=money(total);
+ $("yearly").textContent=money(total*12);
+ $("count").textContent=subscriptions.length+(subscriptions.length>1?" abonnements":" abonnement");
 
- list.innerHTML="";
- calendar.innerHTML="";
+ // Graphique
+ const chart=$("chart");
  chart.innerHTML="";
+ if(!subscriptions.length){
+  chart.innerHTML='<div class="empty">Ajoute ton premier abonnement pour voir tes dépenses.</div>';
+ }else{
+  const max=Math.max(1,...subscriptions.map(monthly));
+  subscriptions.forEach(s=>{
+   const row=document.createElement("div");
+   row.className="bar-row";
+   const name=document.createElement("span");
+   name.textContent=s.name;
+   const bg=document.createElement("div");
+   bg.className="bar-bg";
+   const fill=document.createElement("div");
+   fill.className="bar-fill";
+   fill.style.width=Math.max(2,monthly(s)/max*100)+"%";
+   bg.appendChild(fill);
+   const value=document.createElement("strong");
+   value.textContent=money(monthly(s));
+   row.append(name,bg,value);
+   chart.appendChild(row);
+  });
+ }
 
- const search=document.getElementById("search").value
-  .trim().toLowerCase();
+ // Prochain paiement
+ const next=[...subscriptions].sort((a,b)=>getNext(a)-getNext(b))[0];
+ $("nextPayment").innerHTML="";
+ if(next){
+  const n=document.createElement("strong");
+  n.textContent=next.name;
+  const d=document.createElement("p");
+  d.className="day";
+  d.textContent=dateText(getNext(next));
+  const p=document.createElement("small");
+  p.textContent=money(next.price);
+  $("nextPayment").append(n,d,p);
+ }else{
+  $("nextPayment").innerHTML='<div class="empty">Aucun paiement prévu.</div>';
+ }
 
- const total=subscriptions.reduce(
-  (sum,s)=>sum+monthly(s),0
- );
-
- const sorted=subscriptions.map((s,i)=>({s,i}))
+ // Liste
+ const list=$("list");
+ list.innerHTML="";
+ const query=$("search").value.trim().toLowerCase();
+ const results=subscriptions.map((s,i)=>({s,i}))
+  .filter(x=>x.s.name.toLowerCase().includes(query))
   .sort((a,b)=>getNext(a.s)-getNext(b.s));
 
- const filtered=sorted.filter(({s})=>
-  String(s.name||"").toLowerCase().includes(search)
- );
-
- const max=Math.max(
-  ...subscriptions.map(s=>monthly(s)),
-  1
- );
-
- filtered.forEach(({s,i})=>{
-
-  /* CARTE ABONNEMENT */
-
+ if(!results.length){
+  list.innerHTML='<div class="empty">Aucun abonnement trouvé.</div>';
+ }
+ results.forEach(({s,i})=>{
   const div=document.createElement("div");
   div.className="subscription";
-
   const service=document.createElement("div");
   service.className="service";
-
   const logo=document.createElement("div");
   logo.className="logo";
-  logo.textContent=serviceIcon(s.name);
-
+  logo.textContent=s.name.charAt(0).toUpperCase();
   const info=document.createElement("div");
-
+  info.className="service-info";
   const title=document.createElement("strong");
   title.textContent=s.name;
-
   const detail=document.createElement("p");
-  detail.textContent=money(s.price)+" · "+
-   (s.cycle==="yearly"?"Annuel":
-   s.cycle==="weekly"?"Hebdomadaire":"Mensuel");
-
+  detail.textContent=money(s.price)+" · "+(s.cycle==="yearly"?"Annuel":s.cycle==="weekly"?"Hebdomadaire":"Mensuel");
   info.append(title,detail);
   service.append(logo,info);
-
   const actions=document.createElement("div");
   actions.className="actions";
-
   const edit=document.createElement("button");
   edit.className="edit";
-  edit.textContent="✏️ Modifier";
-
-  edit.onclick=()=>{
-   editing=i;
-
-   document.getElementById("name").value=s.name;
-   document.getElementById("price").value=s.price;
-   document.getElementById("cycle").value=s.cycle;
-   document.getElementById("date").value=s.date;
-
-   document.getElementById("formTitle").textContent=
-    "Modifier l'abonnement";
-
-   document.getElementById("submitButton").textContent=
-    "Enregistrer";
-
-   document.getElementById("form").scrollIntoView({
-    behavior:"smooth"
-   });
-  };
-
+  edit.textContent="Modifier";
+  edit.onclick=()=>openModal(i);
   const del=document.createElement("button");
   del.className="danger";
   del.textContent="Supprimer";
-
   del.onclick=()=>{
    if(confirm("Supprimer cet abonnement ?")){
     subscriptions.splice(i,1);
-    editing=-1;
     save();
-    cancelEdit();
    }
   };
-
   actions.append(edit,del);
   div.append(service,actions);
   list.appendChild(div);
-
-  /* CALENDRIER */
-
-  const event=document.createElement("div");
-  event.className="card";
-
-  const eventName=document.createElement("strong");
-  eventName.textContent=s.name;
-
-  const eventDate=document.createElement("p");
-  eventDate.className="day";
-
-  eventDate.textContent=getNext(s).toLocaleDateString("fr-FR",{
-   weekday:"long",
-   day:"numeric",
-   month:"long",
-   year:"numeric"
-  });
-
-  event.append(eventName,eventDate);
-  calendar.appendChild(event);
-
-  /* GRAPHIQUE */
-
-  const row=document.createElement("div");
-  row.className="bar-row";
-
-  const label=document.createElement("div");
-  label.className="bar-label";
-
-  const name=document.createElement("span");
-  name.textContent=s.name;
-
-  const value=document.createElement("strong");
-  value.textContent=money(monthly(s));
-
-  label.append(name,value);
-
-  const bg=document.createElement("div");
-  bg.className="bar-bg";
-
-  const bar=document.createElement("div");
-  bar.className="bar";
-
-  bar.style.width=(monthly(s)/max*100)+"%";
-
-  bg.appendChild(bar);
-  row.append(label,bg);
-  chart.appendChild(row);
  });
 
- /* MESSAGES VIDES */
-
- if(!subscriptions.length){
-  list.innerHTML=
-   '<div class="empty">Aucun abonnement pour le moment.</div>';
-
-  calendar.innerHTML=
-   '<div class="empty">Ton calendrier est vide.</div>';
-
-  chart.innerHTML=
-   '<div class="empty">Ajoute un abonnement pour voir tes dépenses.</div>';
-
- }else if(!filtered.length){
-  list.innerHTML=
-   '<div class="empty">Aucun résultat trouvé.</div>';
-
-  calendar.innerHTML=
-   '<div class="empty">Aucun paiement trouvé.</div>';
-
-  chart.innerHTML=
-   '<div class="empty">Aucun résultat trouvé.</div>';
- }
-
- /* TOTAUX */
-
- document.getElementById("monthly").textContent=money(total);
- document.getElementById("yearly").textContent=money(total*12);
- document.getElementById("count").textContent=subscriptions.length;
-}
-
-/* ENREGISTREMENT */
-
-function save(){
- localStorage.setItem(
-  "subscriptions",
-  JSON.stringify(subscriptions)
- );
- render();
-}
-
-/* FORMULAIRE */
-
-function cancelEdit(){
- editing=-1;
-
- document.getElementById("form").reset();
-
- document.getElementById("formTitle").textContent=
-  "＋ Ajouter un abonnement";
-
- document.getElementById("submitButton").textContent=
-  "Ajouter mon abonnement";
-}
-
-document.getElementById("form").addEventListener("submit",function(e){
- e.preventDefault();
-
- const s={
-  name:document.getElementById("name").value.trim(),
-  price:Number(document.getElementById("price").value),
-  cycle:document.getElementById("cycle").value,
-  date:document.getElementById("date").value
- };
-
- if(!s.name||!Number.isFinite(s.price)||s.price<=0||!s.date){
-  alert("Vérifie les informations de ton abonnement.");
-  return;
- }
-
- if(editing>=0&&editing<subscriptions.length){
-  subscriptions[editing]=s;
+ // Calendrier
+ const cal=$("calendarList");
+ cal.innerHTML="";
+ const sorted=[...subscriptions].sort((a,b)=>getNext(a)-getNext(b));
+ if(!sorted.length){
+  cal.innerHTML='<div class="empty">Ton calendrier est vide.</div>';
  }else{
-  subscriptions.push(s);
+  sorted.forEach(s=>{
+   const card=document.createElement("div");
+   card.className="card";
+   const name=document.createElement("strong");
+   name.textContent=s.name;
+   const date=document.createElement("p");
+   date.className="day";
+   date.textContent=dateText(getNext(s));
+   const amount=document.createElement("small");
+   amount.textContent=money(s.price);
+   card.append(name,date,amount);
+   cal.appendChild(card);
+  });
  }
+}
 
- save();
- cancelEdit();
-});
+/* Thèmes : les deux boutons changent vraiment tout le thème */
+function applyTheme(theme){
+ document.body.classList.toggle("light",theme==="light");
+ localStorage.setItem("appTheme",theme);
+ $("darkTheme").classList.toggle("selected",theme==="dark");
+ $("lightTheme").classList.toggle("selected",theme==="light");
+ document.querySelector('meta[name="theme-color"]').content=
+  theme==="light"?"#edf4ff":"#100d19";
+}
+$("darkTheme").onclick=()=>applyTheme("dark");
+$("lightTheme").onclick=()=>applyTheme("light");
+applyTheme(localStorage.getItem("appTheme")||"dark");
 
-/* NOTIFICATIONS */
+/* Devise */
+$("currency").value=currency;
+$("currency").onchange=()=>{
+ currency=$("currency").value;
+ localStorage.setItem("appCurrency",currency);
+ render();
+};
 
+/* Exportation */
+$("exportButton").onclick=()=>{
+ const backup={
+  version:5,
+  exportedAt:new Date().toISOString(),
+  subscriptions:subscriptions
+ };
+ const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="mes-abonnements.json";
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $("backupStatus").textContent="Sauvegarde préparée.";
+};
+
+/* Importation */
+$("importButton").onclick=()=>$("importFile").click();
+$("importFile").onchange=async e=>{
+ const file=e.target.files[0];
+ if(!file)return;
+ try{
+  const data=JSON.parse(await file.text());
+  const arr=Array.isArray(data)?data:data.subscriptions;
+  if(!Array.isArray(arr))throw Error();
+  const valid=arr.every(s=>s&&typeof s.name==="string"&&
+   Number.isFinite(Number(s.price))&&
+   ["monthly","yearly","weekly"].includes(s.cycle)&&
+   typeof s.date==="string");
+  if(!valid)throw Error();
+  if(!confirm("Cette sauvegarde remplacera la liste actuelle. Continuer ?"))return;
+  subscriptions=arr;
+  save();
+  $("backupStatus").textContent="Sauvegarde importée avec succès.";
+ }catch(err){
+  $("backupStatus").textContent="Fichier de sauvegarde invalide.";
+ }
+ e.target.value="";
+};
+
+/* Notifications */
 async function activateNotifications(){
  if(!("Notification" in window)){
-  alert("Les notifications ne sont pas disponibles dans ce navigateur.");
+  $("notificationStatus").textContent="Notifications non disponibles dans ce navigateur.";
   return;
  }
-
  try{
   const permission=await Notification.requestPermission();
-
-  document.getElementById("notificationStatus").textContent=
-   permission==="granted"
-   ?"Autorisation accordée"
-   :"Autorisation refusée";
-
+  $("notificationStatus").textContent=
+   permission==="granted"?"Autorisation accordée.":"Autorisation refusée.";
   checkReminders();
- }catch(error){
-  alert("Impossible d'activer les notifications.");
+ }catch(e){
+  $("notificationStatus").textContent="Impossible d'activer les notifications.";
  }
 }
+$("notificationButton").onclick=activateNotifications;
 
 function checkReminders(){
- if(!("Notification" in window))return;
- if(Notification.permission!=="granted")return;
-
+ if(!("Notification" in window)||Notification.permission!=="granted")return;
  const today=new Date();
  today.setHours(0,0,0,0);
-
  subscriptions.forEach(s=>{
-  const date=getNext(s);
-  const days=Math.round((date-today)/86400000);
-  const key=s.name+"-"+date.toISOString().slice(0,10);
-
+  const d=getNext(s);
+  const days=Math.round((d-today)/86400000);
+  const key=s.name+"-"+d.toISOString().slice(0,10);
   if(days===1&&!notified.includes(key)){
-   new Notification("Rappel abonnement",{
-    body=s.name+" sera prélevé demain : "+money(s.price)
-   });
-
-   notified.push(key);
-
-   localStorage.setItem(
-    "notified",
-    JSON.stringify(notified)
-   );
+   try{
+    new Notification("Rappel abonnement",{
+     body=s.name+" sera prélevé demain : "+money(s.price)
+    });
+    notified.push(key);
+    localStorage.setItem("notified",JSON.stringify(notified));
+   }catch(e){}
   }
  });
 }
-
-/* EXPORTATION */
-
-function exportData(){
- const data=JSON.stringify(subscriptions,null,2);
- const blob=new Blob([data],{
-  type:"application/json"
- });
-
- const url=URL.createObjectURL(blob);
- const link=document.createElement("a");
-
- link.href=url;
- link.download="mes-abonnements.json";
- link.click();
-
- URL.revokeObjectURL(url);
-}
-
-/* IMPORTATION */
-
-function importData(){
- const file=document.getElementById("importFile").files[0];
-
- if(!file){
-  alert("Choisis d'abord un fichier de sauvegarde.");
-  return;
- }
-
- const reader=new FileReader();
-
- reader.onload=()=>{
-  try{
-   const data=JSON.parse(reader.result);
-
-   const valid=Array.isArray(data)&&data.every(s=>
-    s&&typeof s.name==="string"&&
-    Number.isFinite(Number(s.price))&&
-    Number(s.price)>0&&
-    ["monthly","yearly","weekly"].includes(s.cycle)&&
-    typeof s.date==="string"&&
-    !isNaN(new Date(s.date+"T12:00:00").getTime())
-   );
-
-   if(!valid){
-    alert("Ce fichier de sauvegarde n'est pas valide.");
-    return;
-   }
-
-   if(!confirm("Remplacer tes abonnements actuels par cette sauvegarde ?")){
-    return;
-   }
-
-   subscriptions=data;
-   save();
-
-   alert("Sauvegarde importée avec succès !");
-  }catch(error){
-   alert("Impossible de lire ce fichier.");
-  }
- };
-
- reader.readAsText(file);
-}
-
-/* INITIALISATION */
-
 if("Notification" in window&&Notification.permission==="granted"){
- document.getElementById("notificationStatus").textContent=
-  "Autorisation accordée";
+ $("notificationStatus").textContent="Autorisation accordée.";
 }
 
 render();
 checkReminders();
 setInterval(checkReminders,60000);
-
 </script>
 </body>
 </html>
