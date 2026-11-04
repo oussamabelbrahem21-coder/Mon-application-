@@ -5,184 +5,495 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#100d19">
-<title>My Subscriptions</title>
+<title>My Subscriptions 4.0</title>
+
 <style>
 *{box-sizing:border-box}
+
+:root{
+ --bg:#100d19;
+ --card:#211a30;
+ --border:#38294c;
+ --text:#ffffff;
+ --muted:#b5a5ca;
+ --accent:#c59aff;
+ --button:#8953d8;
+ --input:#171222;
+}
+
+body.blue{
+ --bg:#edf5ff;
+ --card:#ffffff;
+ --border:#c9ddf5;
+ --text:#183252;
+ --muted:#66809e;
+ --accent:#287bd5;
+ --button:#287bd5;
+ --input:#f3f8ff;
+}
+
 body{
- margin:0;background:#100d19;color:#fff;
- font-family:Arial,sans-serif;padding:22px;
+ margin:0;
+ padding:18px;
+ background:var(--bg);
+ color:var(--text);
+ font-family:Arial,sans-serif;
+ transition:background .2s,color .2s;
 }
-header{padding:20px 0;text-align:center}
-header h1{font-size:29px;margin:0;color:#d4b5ff}
-header p{color:#a99bbd;font-size:14px}
-h2{font-size:19px;margin-top:28px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{
- background:#211a30;border:1px solid #38294c;
- border-radius:17px;padding:17px;margin:12px 0;
+
+header{
+ text-align:center;
+ padding:20px 0;
 }
-small,.muted{color:#b5a5ca}
-.amount{font-size:23px;color:#c59aff;font-weight:bold;margin-top:12px}
+
+header h1{
+ font-size:29px;
+ color:var(--accent);
+ margin:0;
+}
+
+header p{
+ color:var(--muted);
+ font-size:14px;
+}
+
+h2{
+ font-size:19px;
+ margin-top:25px;
+}
+
+.card,.subscription{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:16px;
+ padding:16px;
+ margin:12px 0;
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
+
+small,.muted{
+ color:var(--muted);
+}
+
+.amount{
+ font-size:22px;
+ color:var(--accent);
+ font-weight:bold;
+ margin-top:10px;
+}
+
 input,select{
- width:100%;padding:14px;margin:9px 0 15px;
- background:#171222;color:white;border:1px solid #49355f;
- border-radius:10px;font-size:16px;
+ width:100%;
+ padding:13px;
+ margin:8px 0 14px;
+ background:var(--input);
+ color:var(--text);
+ border:1px solid var(--border);
+ border-radius:10px;
+ font-size:16px;
 }
-label{font-size:13px;color:#c8b9da}
+
+label{
+ font-size:13px;
+ color:var(--muted);
+}
+
 button{
- border:0;border-radius:10px;padding:12px;
- background:#8953d8;color:white;font-weight:bold;
+ border:0;
+ border-radius:10px;
+ padding:12px;
+ background:var(--button);
+ color:white;
+ font-weight:bold;
  cursor:pointer;
 }
+
 button:active{opacity:.7}
-.primary{width:100%;padding:15px;font-size:15px}
-.subscription{
- background:#211a30;border:1px solid #38294c;
- border-radius:15px;padding:15px;margin:12px 0;
+
+.primary{
+ width:100%;
+ padding:15px;
 }
-.subscription p{color:#b5a5ca;font-size:13px}
-.service{display:flex;align-items:center;gap:12px}
-.logo{
- width:43px;height:43px;border-radius:12px;
- display:flex;align-items:center;justify-content:center;
- background:#392650;color:#dfc3ff;font-size:20px;font-weight:bold;
+
+.secondary{
+ background:var(--border);
+ color:var(--text);
 }
-.actions{display:flex;gap:8px;margin-top:12px}
+
+.danger{background:#b43f60}
 .edit{background:#554071}
-.delete{background:#a63f65}
-.day{color:#d1aaff;font-weight:bold}
-.empty{text-align:center;color:#a99bbd;padding:20px}
-footer{text-align:center;color:#887a9d;font-size:12px;margin:35px 0}
+
+.theme-buttons{
+ display:flex;
+ gap:10px;
+}
+
+.theme-buttons button{
+ flex:1;
+ min-height:48px;
+}
+
+.service{
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+
+.logo{
+ width:44px;
+ height:44px;
+ border-radius:12px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:var(--border);
+ font-size:22px;
+ flex-shrink:0;
+}
+
+.service p{
+ margin:6px 0 0;
+ color:var(--muted);
+ font-size:13px;
+}
+
+.actions{
+ display:flex;
+ gap:8px;
+ margin-top:12px;
+}
+
+.actions button{flex:1}
+
+.day{
+ color:var(--accent);
+ font-weight:bold;
+}
+
+.empty{
+ text-align:center;
+ color:var(--muted);
+ padding:20px;
+}
+
+.bar-row{margin:14px 0}
+
+.bar-label{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ font-size:13px;
+}
+
+.bar-bg{
+ height:10px;
+ background:var(--border);
+ border-radius:10px;
+ margin-top:7px;
+ overflow:hidden;
+}
+
+.bar{
+ height:100%;
+ background:var(--accent);
+ border-radius:10px;
+}
+
+footer{
+ text-align:center;
+ color:var(--muted);
+ font-size:12px;
+ margin:30px 0;
+}
+
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>💜 My Subscriptions</h1>
+<h1>My Subscriptions</h1>
 <p>Tous tes abonnements sous contrôle</p>
 </header>
 
-<div class="stats">
- <div class="card">
-  <small>Dépenses mensuelles</small>
-  <div class="amount" id="monthly">0 €</div>
- </div>
- <div class="card">
-  <small>Dépenses annuelles</small>
-  <div class="amount" id="yearly">0 €</div>
- </div>
+<div class="card">
+<h2>Apparence</h2>
+<p class="muted">Choisis ton style préféré.</p>
+<div class="theme-buttons">
+<button onclick="setTheme('dark')">Noir et violet</button>
+<button onclick="setTheme('blue')">Bleu et blanc</button>
+</div>
 </div>
 
-<h2>📊 Mon tableau de bord</h2>
 <div class="card">
- <small>Nombre d'abonnements actifs</small>
- <div class="amount" id="count">0</div>
+<label for="currency">Devise d'affichage</label>
+<select id="currency" onchange="changeCurrency()">
+<option value="EUR">Euro (€)</option>
+<option value="USD">Dollar ($)</option>
+<option value="GBP">Livre (£)</option>
+</select>
+<p class="muted">Le choix change le symbole affiché, pas la conversion des montants.</p>
 </div>
+
+<div class="stats">
+<div class="card">
+<small>Dépenses mensuelles</small>
+<div class="amount" id="monthly">0 €</div>
+</div>
+<div class="card">
+<small>Dépenses annuelles</small>
+<div class="amount" id="yearly">0 €</div>
+</div>
+</div>
+
+<div class="card">
+<small>Nombre d'abonnements actifs</small>
+<div class="amount" id="count">0</div>
+</div>
+
+<h2>📊 Dépenses par service</h2>
+<div class="card" id="chart"></div>
 
 <h2>📅 Prochains paiements</h2>
 <div id="calendar"></div>
 
-<h2>💳 Mes abonnements</h2>
+<h2>Mes abonnements</h2>
+<input
+ id="search"
+ type="search"
+ placeholder="Rechercher un abonnement..."
+ oninput="render()"
+>
 <div id="list"></div>
 
 <form id="form" class="card">
 <h2 id="formTitle">＋ Ajouter un abonnement</h2>
 
-<label>Nom du service</label>
+<label for="name">Nom du service</label>
 <input id="name" placeholder="Netflix, Spotify..." required>
 
-<label>Prix en euros</label>
+<label for="price">Prix en euros</label>
 <input id="price" type="number" min="0.01" step="0.01" required>
 
-<label>Fréquence</label>
+<label for="cycle">Fréquence</label>
 <select id="cycle">
 <option value="monthly">Tous les mois</option>
 <option value="yearly">Tous les ans</option>
 <option value="weekly">Toutes les semaines</option>
 </select>
 
-<label>Prochain prélèvement</label>
+<label for="date">Prochain prélèvement</label>
 <input id="date" type="date" required>
 
 <button class="primary" id="submitButton" type="submit">
 Ajouter mon abonnement
 </button>
+
+<button
+ class="secondary primary"
+ type="button"
+ onclick="cancelEdit()"
+ style="margin-top:8px"
+>
+Annuler la modification
+</button>
 </form>
 
 <div class="card">
 <h2>🔔 Mes rappels</h2>
-<p class="muted">Autorise les notifications pour recevoir un rappel la veille d'un paiement lorsque l'application peut les exécuter.</p>
-<button onclick="activateNotifications()">Activer les notifications</button>
-<p id="notificationStatus" class="muted">Notifications non activées</p>
+<p class="muted">
+Autorise les notifications pour recevoir un rappel la veille
+d'un paiement lorsque l'application peut les exécuter.
+</p>
+<button onclick="activateNotifications()">
+Activer les notifications
+</button>
+<p id="notificationStatus" class="muted">
+Notifications non activées
+</p>
 </div>
 
-<footer>MY SUBSCRIPTIONS · VERSION 3.0 💜</footer>
+<div class="card">
+<h2>💾 Sauvegarde</h2>
+<p class="muted">
+Télécharge une copie de tes abonnements pour les conserver.
+</p>
+
+<button onclick="exportData()">Exporter mes abonnements</button>
+
+<label for="importFile" style="display:block;margin-top:18px">
+Restaurer une sauvegarde
+</label>
+<input type="file" id="importFile" accept=".json,application/json">
+
+<button onclick="importData()">Importer la sauvegarde</button>
+</div>
+
+<footer>MY SUBSCRIPTIONS · VERSION 4.0</footer>
 
 <script>
-let subscriptions=JSON.parse(
- localStorage.getItem("subscriptions")||"[]"
-);
-let editing=-1;
-let notified=JSON.parse(localStorage.getItem("notified")||"[]");
+"use strict";
 
-function money(n){
- return n.toLocaleString("fr-FR",{
-  style:"currency",currency:"EUR"
+/* CHARGEMENT DES DONNÉES */
+
+function readStorage(key,fallback){
+ try{
+  const value=localStorage.getItem(key);
+  return value===null?fallback:JSON.parse(value);
+ }catch(error){
+  return fallback;
+ }
+}
+
+let subscriptions=readStorage("subscriptions",[]);
+if(!Array.isArray(subscriptions))subscriptions=[];
+
+let notified=readStorage("notified",[]);
+if(!Array.isArray(notified))notified=[];
+
+let editing=-1;
+
+let currency=localStorage.getItem("currency")||"EUR";
+
+document.getElementById("currency").value=currency;
+
+/* APPARENCE */
+
+function setTheme(theme){
+ document.body.classList.toggle("blue",theme==="blue");
+ localStorage.setItem("appTheme",theme);
+}
+
+setTheme(localStorage.getItem("appTheme")||"dark");
+
+/* DEVISE */
+
+function changeCurrency(){
+ currency=document.getElementById("currency").value;
+ localStorage.setItem("currency",currency);
+ render();
+}
+
+function money(value){
+ return Number(value).toLocaleString("fr-FR",{
+  style:"currency",
+  currency:currency
  });
 }
 
-function getNext(s){
- let d=new Date(s.date+"T12:00:00");
- let now=new Date();
- now.setHours(0,0,0,0);
- while(d<now){
-  if(s.cycle==="weekly")d.setDate(d.getDate()+7);
-  else if(s.cycle==="yearly")d.setFullYear(d.getFullYear()+1);
-  else{
-   let day=d.getDate();
-   d.setDate(1);
-   d.setMonth(d.getMonth()+1);
-   d.setDate(Math.min(day,new Date(
-    d.getFullYear(),d.getMonth()+1,0
-   ).getDate()));
+/* CALCULS */
+
+function getNext(subscription){
+ let date=new Date(subscription.date+"T12:00:00");
+
+ if(isNaN(date.getTime()))return new Date();
+
+ let today=new Date();
+ today.setHours(0,0,0,0);
+
+ while(date<today){
+  if(subscription.cycle==="weekly"){
+   date.setDate(date.getDate()+7);
+  }else if(subscription.cycle==="yearly"){
+   date.setFullYear(date.getFullYear()+1);
+  }else{
+   let day=date.getDate();
+   date.setDate(1);
+   date.setMonth(date.getMonth()+1);
+   let lastDay=new Date(
+    date.getFullYear(),
+    date.getMonth()+1,
+    0
+   ).getDate();
+   date.setDate(Math.min(day,lastDay));
   }
  }
- return d;
+
+ return date;
 }
 
-function monthly(s){
- if(s.cycle==="yearly")return s.price/12;
- if(s.cycle==="weekly")return s.price*52/12;
- return s.price;
+function monthly(subscription){
+ let price=Number(subscription.price)||0;
+
+ if(subscription.cycle==="yearly")return price/12;
+ if(subscription.cycle==="weekly")return price*52/12;
+
+ return price;
 }
+
+/* LOGOS AUTOMATIQUES */
+
+function serviceIcon(name){
+ let n=name.toLowerCase();
+
+ if(n.includes("netflix"))return "🎬";
+ if(n.includes("spotify"))return "🎵";
+ if(n.includes("disney"))return "🏰";
+ if(n.includes("youtube"))return "▶️";
+ if(n.includes("amazon"))return "📦";
+ if(n.includes("apple"))return "🍎";
+ if(n.includes("google"))return "🔎";
+ if(n.includes("icloud"))return "☁️";
+ if(n.includes("sport")||n.includes("gym"))return "🏋️";
+
+ return name.charAt(0).toUpperCase();
+}
+
+/* AFFICHAGE */
 
 function render(){
  const list=document.getElementById("list");
  const calendar=document.getElementById("calendar");
+ const chart=document.getElementById("chart");
+
  list.innerHTML="";
  calendar.innerHTML="";
- let total=0;
+ chart.innerHTML="";
 
- let sorted=subscriptions.map((s,i)=>({s,i}))
- .sort((a,b)=>getNext(a.s)-getNext(b.s));
+ const search=document.getElementById("search").value
+  .trim().toLowerCase();
 
- sorted.forEach(({s,i})=>{
-  total+=monthly(s);
+ const total=subscriptions.reduce(
+  (sum,s)=>sum+monthly(s),0
+ );
 
-  let div=document.createElement("div");
+ const sorted=subscriptions.map((s,i)=>({s,i}))
+  .sort((a,b)=>getNext(a.s)-getNext(b.s));
+
+ const filtered=sorted.filter(({s})=>
+  String(s.name||"").toLowerCase().includes(search)
+ );
+
+ const max=Math.max(
+  ...subscriptions.map(s=>monthly(s)),
+  1
+ );
+
+ filtered.forEach(({s,i})=>{
+
+  /* CARTE ABONNEMENT */
+
+  const div=document.createElement("div");
   div.className="subscription";
 
-  let service=document.createElement("div");
+  const service=document.createElement("div");
   service.className="service";
 
-  let logo=document.createElement("div");
+  const logo=document.createElement("div");
   logo.className="logo";
-  logo.textContent=s.name.charAt(0).toUpperCase();
+  logo.textContent=serviceIcon(s.name);
 
-  let info=document.createElement("div");
-  let title=document.createElement("strong");
+  const info=document.createElement("div");
+
+  const title=document.createElement("strong");
   title.textContent=s.name;
-  let detail=document.createElement("p");
+
+  const detail=document.createElement("p");
   detail.textContent=money(s.price)+" · "+
    (s.cycle==="yearly"?"Annuel":
    s.cycle==="weekly"?"Hebdomadaire":"Mensuel");
@@ -190,30 +501,42 @@ function render(){
   info.append(title,detail);
   service.append(logo,info);
 
-  let actions=document.createElement("div");
+  const actions=document.createElement("div");
   actions.className="actions";
 
-  let edit=document.createElement("button");
+  const edit=document.createElement("button");
   edit.className="edit";
   edit.textContent="✏️ Modifier";
+
   edit.onclick=()=>{
    editing=i;
+
    document.getElementById("name").value=s.name;
    document.getElementById("price").value=s.price;
    document.getElementById("cycle").value=s.cycle;
    document.getElementById("date").value=s.date;
-   document.getElementById("formTitle").textContent="✏️ Modifier";
-   document.getElementById("submitButton").textContent="Enregistrer";
-   document.getElementById("form").scrollIntoView({behavior:"smooth"});
+
+   document.getElementById("formTitle").textContent=
+    "Modifier l'abonnement";
+
+   document.getElementById("submitButton").textContent=
+    "Enregistrer";
+
+   document.getElementById("form").scrollIntoView({
+    behavior:"smooth"
+   });
   };
 
-  let del=document.createElement("button");
-  del.className="delete";
+  const del=document.createElement("button");
+  del.className="danger";
   del.textContent="Supprimer";
+
   del.onclick=()=>{
    if(confirm("Supprimer cet abonnement ?")){
     subscriptions.splice(i,1);
+    editing=-1;
     save();
+    cancelEdit();
    }
   };
 
@@ -221,99 +544,259 @@ function render(){
   div.append(service,actions);
   list.appendChild(div);
 
-  let event=document.createElement("div");
+  /* CALENDRIER */
+
+  const event=document.createElement("div");
   event.className="card";
 
-  let eventName=document.createElement("strong");
-  eventName.textContent="💜 "+s.name;
+  const eventName=document.createElement("strong");
+  eventName.textContent=s.name;
 
-  let eventDate=document.createElement("p");
+  const eventDate=document.createElement("p");
   eventDate.className="day";
+
   eventDate.textContent=getNext(s).toLocaleDateString("fr-FR",{
-   weekday:"long",day:"numeric",month:"long",year:"numeric"
+   weekday:"long",
+   day:"numeric",
+   month:"long",
+   year:"numeric"
   });
 
   event.append(eventName,eventDate);
   calendar.appendChild(event);
+
+  /* GRAPHIQUE */
+
+  const row=document.createElement("div");
+  row.className="bar-row";
+
+  const label=document.createElement("div");
+  label.className="bar-label";
+
+  const name=document.createElement("span");
+  name.textContent=s.name;
+
+  const value=document.createElement("strong");
+  value.textContent=money(monthly(s));
+
+  label.append(name,value);
+
+  const bg=document.createElement("div");
+  bg.className="bar-bg";
+
+  const bar=document.createElement("div");
+  bar.className="bar";
+
+  bar.style.width=(monthly(s)/max*100)+"%";
+
+  bg.appendChild(bar);
+  row.append(label,bg);
+  chart.appendChild(row);
  });
 
+ /* MESSAGES VIDES */
+
  if(!subscriptions.length){
-  list.innerHTML='<div class="empty">Aucun abonnement pour le moment 💜</div>';
-  calendar.innerHTML='<div class="empty">Ton calendrier est vide.</div>';
+  list.innerHTML=
+   '<div class="empty">Aucun abonnement pour le moment.</div>';
+
+  calendar.innerHTML=
+   '<div class="empty">Ton calendrier est vide.</div>';
+
+  chart.innerHTML=
+   '<div class="empty">Ajoute un abonnement pour voir tes dépenses.</div>';
+
+ }else if(!filtered.length){
+  list.innerHTML=
+   '<div class="empty">Aucun résultat trouvé.</div>';
+
+  calendar.innerHTML=
+   '<div class="empty">Aucun paiement trouvé.</div>';
+
+  chart.innerHTML=
+   '<div class="empty">Aucun résultat trouvé.</div>';
  }
+
+ /* TOTAUX */
 
  document.getElementById("monthly").textContent=money(total);
  document.getElementById("yearly").textContent=money(total*12);
  document.getElementById("count").textContent=subscriptions.length;
 }
 
+/* ENREGISTREMENT */
+
 function save(){
- localStorage.setItem("subscriptions",JSON.stringify(subscriptions));
+ localStorage.setItem(
+  "subscriptions",
+  JSON.stringify(subscriptions)
+ );
  render();
 }
 
-document.getElementById("form").addEventListener("submit",e=>{
+/* FORMULAIRE */
+
+function cancelEdit(){
+ editing=-1;
+
+ document.getElementById("form").reset();
+
+ document.getElementById("formTitle").textContent=
+  "＋ Ajouter un abonnement";
+
+ document.getElementById("submitButton").textContent=
+  "Ajouter mon abonnement";
+}
+
+document.getElementById("form").addEventListener("submit",function(e){
  e.preventDefault();
 
- let s={
+ const s={
   name:document.getElementById("name").value.trim(),
   price:Number(document.getElementById("price").value),
   cycle:document.getElementById("cycle").value,
   date:document.getElementById("date").value
  };
 
- if(editing>=0){
+ if(!s.name||!Number.isFinite(s.price)||s.price<=0||!s.date){
+  alert("Vérifie les informations de ton abonnement.");
+  return;
+ }
+
+ if(editing>=0&&editing<subscriptions.length){
   subscriptions[editing]=s;
-  editing=-1;
  }else{
   subscriptions.push(s);
  }
 
  save();
- e.target.reset();
- document.getElementById("formTitle").textContent="＋ Ajouter un abonnement";
- document.getElementById("submitButton").textContent="Ajouter mon abonnement";
+ cancelEdit();
 });
+
+/* NOTIFICATIONS */
 
 async function activateNotifications(){
  if(!("Notification" in window)){
-  alert("Notifications non disponibles dans ce navigateur.");
+  alert("Les notifications ne sont pas disponibles dans ce navigateur.");
   return;
  }
- let permission=await Notification.requestPermission();
- document.getElementById("notificationStatus").textContent=
- permission==="granted"?"✅ Autorisation accordée":"Autorisation refusée";
- checkReminders();
+
+ try{
+  const permission=await Notification.requestPermission();
+
+  document.getElementById("notificationStatus").textContent=
+   permission==="granted"
+   ?"Autorisation accordée"
+   :"Autorisation refusée";
+
+  checkReminders();
+ }catch(error){
+  alert("Impossible d'activer les notifications.");
+ }
 }
 
 function checkReminders(){
- if(!("Notification" in window)||Notification.permission!=="granted")return;
+ if(!("Notification" in window))return;
+ if(Notification.permission!=="granted")return;
 
- let today=new Date();
+ const today=new Date();
  today.setHours(0,0,0,0);
 
  subscriptions.forEach(s=>{
-  let d=getNext(s);
-  let days=Math.round((d-today)/86400000);
-  let key=s.name+"-"+d.toISOString().slice(0,10);
+  const date=getNext(s);
+  const days=Math.round((date-today)/86400000);
+  const key=s.name+"-"+date.toISOString().slice(0,10);
 
   if(days===1&&!notified.includes(key)){
    new Notification("Rappel abonnement",{
-    body:s.name+" sera prélevé demain : "+money(s.price)
+    body=s.name+" sera prélevé demain : "+money(s.price)
    });
+
    notified.push(key);
-   localStorage.setItem("notified",JSON.stringify(notified));
+
+   localStorage.setItem(
+    "notified",
+    JSON.stringify(notified)
+   );
   }
  });
 }
 
+/* EXPORTATION */
+
+function exportData(){
+ const data=JSON.stringify(subscriptions,null,2);
+ const blob=new Blob([data],{
+  type:"application/json"
+ });
+
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+
+ link.href=url;
+ link.download="mes-abonnements.json";
+ link.click();
+
+ URL.revokeObjectURL(url);
+}
+
+/* IMPORTATION */
+
+function importData(){
+ const file=document.getElementById("importFile").files[0];
+
+ if(!file){
+  alert("Choisis d'abord un fichier de sauvegarde.");
+  return;
+ }
+
+ const reader=new FileReader();
+
+ reader.onload=()=>{
+  try{
+   const data=JSON.parse(reader.result);
+
+   const valid=Array.isArray(data)&&data.every(s=>
+    s&&typeof s.name==="string"&&
+    Number.isFinite(Number(s.price))&&
+    Number(s.price)>0&&
+    ["monthly","yearly","weekly"].includes(s.cycle)&&
+    typeof s.date==="string"&&
+    !isNaN(new Date(s.date+"T12:00:00").getTime())
+   );
+
+   if(!valid){
+    alert("Ce fichier de sauvegarde n'est pas valide.");
+    return;
+   }
+
+   if(!confirm("Remplacer tes abonnements actuels par cette sauvegarde ?")){
+    return;
+   }
+
+   subscriptions=data;
+   save();
+
+   alert("Sauvegarde importée avec succès !");
+  }catch(error){
+   alert("Impossible de lire ce fichier.");
+  }
+ };
+
+ reader.readAsText(file);
+}
+
+/* INITIALISATION */
+
 if("Notification" in window&&Notification.permission==="granted"){
- document.getElementById("notificationStatus").textContent="✅ Autorisation accordée";
+ document.getElementById("notificationStatus").textContent=
+  "Autorisation accordée";
 }
 
 render();
 checkReminders();
 setInterval(checkReminders,60000);
+
 </script>
 </body>
 </html>
