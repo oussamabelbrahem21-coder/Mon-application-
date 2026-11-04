@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes Abonnements</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#101827;color:white;padding:22px}
+header{text-align:center;padding:20px 0}
+header h1{font-size:28px;margin-bottom:8px}
+header p{color:#9caac0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:#1d293b;padding:18px;border-radius:16px;margin-bottom:15px}
+.card small{color:#aab6ca}
+.amount{font-size:25px;font-weight:bold;margin-top:10px;color:#75e0b0}
+h2{font-size:19px}
+form{background:#1d293b;padding:18px;border-radius:16px;margin-top:20px}
+input,select{width:100%;padding:13px;margin:8px 0 14px;border:1px solid #39475b;border-radius:9px;background:#101827;color:white;font-size:16px}
+label{font-size:13px;color:#cbd5e1}
+button{border:0;border-radius:10px;padding:13px;background:#735cf5;color:white;font-size:15px;font-weight:bold;cursor:pointer}
+form button{width:100%}
+.subscription{background:#1d293b;padding:16px;border-radius:13px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.subscription p{margin:6px 0;color:#aab6ca;font-size:13px}
+.delete{background:#e44b61;padding:9px;font-size:12px}
+.empty{text-align:center;color:#9caac0;padding:25px}
+footer{text-align:center;color:#77849a;font-size:12px;margin:30px 0}
+</style>
+</head>
+<body>
+
+<header>
+<h1>💎 Mes Abonnements</h1>
+<p>Gère toutes tes dépenses au même endroit</p>
+</header>
+
+<div class="stats">
+<div class="card">
+<small>Budget mensuel</small>
+<div class="amount" id="monthly">0,00 €</div>
+</div>
+<div class="card">
+<small>Budget annuel</small>
+<div class="amount" id="yearly">0,00 €</div>
+</div>
+</div>
+
+<h2>📋 Mes abonnements</h2>
+<div id="list"></div>
+
+<form id="form">
+<h2>➕ Ajouter un abonnement</h2>
+
+<label>Nom du service</label>
+<input id="name" placeholder="Ex : Netflix" required>
+
+<label>Prix (€)</label>
+<input id="price" type="number" min="0" step="0.01" placeholder="Ex : 15.99" required>
+
+<label>Fréquence de paiement</label>
+<select id="cycle">
+<option value="monthly">Tous les mois</option>
+<option value="yearly">Tous les ans</option>
+<option value="weekly">Toutes les semaines</option>
+</select>
+
+<label>Prochain prélèvement</label>
+<input id="date" type="date" required>
+
+<button type="submit">Ajouter mon abonnement</button>
+</form>
+
+<footer>Mes Abonnements · Tes dépenses sous contrôle ❤️</footer>
+
+<script>
+let subscriptions = JSON.parse(localStorage.getItem("subscriptions") || "[]");
+
+function money(value){
+ return value.toLocaleString("fr-FR",{style:"currency",currency:"EUR"});
+}
+
+function monthlyCost(s){
+ if(s.cycle==="yearly") return s.price/12;
+ if(s.cycle==="weekly") return s.price*52/12;
+ return s.price;
+}
+
+function save(){
+ localStorage.setItem("subscriptions",JSON.stringify(subscriptions));
+ render();
+}
+
+function render(){
+ const list=document.getElementById("list");
+ list.innerHTML="";
+
+ let total=0;
+
+ subscriptions.forEach((s,i)=>{
+ total+=monthlyCost(s);
+
+ const div=document.createElement("div");
+ div.className="subscription";
+
+ const info=document.createElement("div");
+ const name=document.createElement("strong");
+ name.textContent="📦 "+s.name;
+ const details=document.createElement("p");
+ details.textContent=money(s.price)+" · "+
+ (s.cycle==="yearly"?"Annuel":s.cycle==="weekly"?"Hebdomadaire":"Mensuel")+
+ " · Prochain paiement : "+s.date;
+
+ info.append(name,details);
+
+ const del=document.createElement("button");
+ del.className="delete";
+ del.textContent="Supprimer";
+ del.onclick=()=>{
+ if(confirm("Supprimer cet abonnement ?")){
+ subscriptions.splice(i,1);
+ save();
+ }
+ };
+
+ div.append(info,del);
+ list.appendChild(div);
+ });
+
+ if(subscriptions.length===0){
+ list.innerHTML='<div class="empty">Aucun abonnement pour le moment.<br>Ajoute ton premier abonnement ! 😊</div>';
+ }
+
+ document.getElementById("monthly").textContent=money(total);
+ document.getElementById("yearly").textContent=money(total*12);
+}
+
+document.getElementById("form").addEventListener("submit",function(e){
+ e.preventDefault();
+
+ subscriptions.push({
+ name:document.getElementById("name").value.trim(),
+ price:Number(document.getElementById("price").value),
+ cycle:document.getElementById("cycle").value,
+ date:document.getElementById("date").value
+ });
+
+ save();
+ this.reset();
+});
+
+render();
+</script>
+</body>
+</html>
